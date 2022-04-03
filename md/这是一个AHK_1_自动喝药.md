@@ -58,7 +58,57 @@ startDrink() {
   - 出参：也就是返回值
 - 我们甚至可以在函数上方绑定热键，直接触发，不过一般是在无参函数上绑定。
 
-### 3. 定时器
+### 3. 键盘事件
+```ahk
+send keys
+```
+#### 参数介绍
+详情点击 [key名称](https://orz707.gitee.io/zh-cn/docs/commands/Send.htm#keynames)
+- `keys`  
+  |符号|按键|
+  |---|---|
+  |`^`|<kbd>Ctrl</kbd>|
+  |`+`|<kbd>Shift</kbd>|
+  |`!`|<kbd>Alt</kbd>|
+  |`#`|<kbd>LWin</kbd> 或 <kbd>RWin</kbd>|
+  |...|...|
+#### 例子
+```ahk
+; QQ默认截图 Ctrl + Alt + a
+send ^!a
+; 重复按a键10次
+send {a 10}
+; 按住e
+send {e down}
+; 弹起e
+send {e up}
+```
+
+### 4. 鼠标事件
+```ahk
+click [, Options]
+```
+#### 参数介绍
+点击链接 [鼠标点击](https://orz707.gitee.io/zh-cn/docs/commands/Click.htm) 查看详情
+#### 例子
+```ahk
+; 当前光标处单击
+click
+; 指定坐标点单击
+click, 100 100
+; 移动鼠标不单击
+click, 100 100 0
+; 指定坐标点右击
+click, 100 100 Right
+; 当前位置双击
+click, 2
+; 按住左键
+click, down
+; 松开右键
+click, up Right
+```
+
+### 5. 定时器
 点击链接 [SetTimer](https://orz707.gitee.io/zh-cn/docs/commands/SetTimer.htm) 即可查看官方API，要是看不懂，请往下看：  
 ```ahk
 ; 以指定时间重复运行
@@ -107,4 +157,4 @@ class MyTimer {
 ```
 ## 三、落地实现
 >俗话说天上飞的理念，对应着落地跑的实现  
->话不多说，上代码！
+>话不多说，开始实操！
