@@ -1,0 +1,110 @@
+# 这是一个简单粗暴的AHK自动喝药教程
+***
+## 一、需求描述
+- 在游戏，我们总有遇到一些按键需要咱定时去按的，比如说喝药，比如说技能等等。
+- 我们需要程序能够定期的去执行一个功能，达到一个定时器的效果
+## 二、可行性分析
+>这是第一期，所以该讲的基础我必须要啰嗦，所以会有点长。  
+>不过我尽我所能，讲的通俗易懂些。
+### 1. 变量
+点击链接 [变量](https://orz707.gitee.io/zh-cn/docs/Variables.htm) 即可查看官方API，要是看不懂，请往下看：  
+#### 赋值
+>API上有两种变量的赋值方式，但我只推荐第二种——表达式。  
+>咱就是说，初期学习，别把自己绕晕了。   
+>PS：这是我踩过的坑，折磨死我了...
+```ahk
+str := "this is a var"
+```
+- 上述代码中，`str` 就是一个变量，那么在其他地方调用 `str` ，就代表着 `this is a var` 。
+#### 取值
+```ahk
+msgbox %str%
+msgbox % str
+```
+- 第一行是传统方式，第二行是表达式方式，依然是推荐表达式。
+
+### 2. 标签、热键、函数
+点击链接 [标签](https://orz707.gitee.io/zh-cn/docs/misc/Labels.htm#Functions) 即可查看官方API，要是看不懂，请往下看： 
+#### 标签 
+```ahk
+label:
+; do sth.
+return
+```
+- 标签指的就是这玩意：`label:` 我们可以随意定义`label`，可以是`qwer`，甚至可以是汉字`喝药`。**但是，不可以是关键字哦！**
+>关键字就例如API里提到的那些规定好的字段，一般只要你设计的标签名称够怪，不会和关键字冲突的
+#### 热键
+```ahk
+F1::
+; 你想实现的功能
+retrun
+```
+- 热键就是指：我们按下设计好的键盘或者鼠标命令后，可以运行指定的程序。通常是在热键后面加上双冒号`::`
+意思就是说，我们按下 <kbd>F1</kbd> 后，就会实现里面写的程序，最后以 `return` 结尾。
+#### 函数★
+```ahk
+func(var) {
+    index := var
+}
+
+F2::
+startDrink() {
+    ; do sth.
+}
+```
+- 函数并不真的指数学上的函数哈，它可以理解成一个封装好的功能。
+- 我们可以定义函数的入参和出参：
+  - 入参：每个函数可以自带多个变量，这个是私有的
+  - 出参：也就是返回值
+- 我们甚至可以在函数上方绑定热键，直接触发，不过一般是在无参函数上绑定。
+
+### 3. 定时器
+点击链接 [SetTimer](https://orz707.gitee.io/zh-cn/docs/commands/SetTimer.htm) 即可查看官方API，要是看不懂，请往下看：  
+```ahk
+; 以指定时间重复运行
+SetTimer [, Label, PeriodOnOffDelete, Priority]
+```
+>方括号里表示可省略的参数
+#### 参数介绍：
+  - `Label`：可以直接填无参函数，如果想要实现有参函数，那么官方给出一个 `class` 类封装的实现，这个我会单独讲
+  - `PeriodOnOffDelete`：
+    - `On`：开启，如没有就新建默认延迟250（0.25秒）的定时器
+    - `Off`：关闭，但不删除
+    - `Delete`：删除，字面意思
+    - `Period`：周期，也就是延迟，单位毫秒（1秒 = 1000毫秒），默认250
+      - 如果为负数，则只执行一次
+  - `Priority`：优先级。通常用来提高优先级去重置同名定时器。但是个人不推荐用这种方式，不够优雅，最好是定义一个 `class` 去管理一批定时器
+
+#### 基本用法示例
+```ahk
+; 一秒执行一次 func 函数
+SetTimer, func, 1000
+
+func() {
+    msgbox 这里是func函数
+}
+```
+
+#### 以 `class` 的方式去创建一个定时器类
+```ahk
+class MyTimer {
+    __New() {
+        this.timer := ObjBindMethod(this, "Func")
+        this.interval := 1000
+    }
+    Strat() {
+        timer := ObjBindMethod(this, "Func")
+        SetTimer % timer, % this.interval
+    }
+    Stop() {
+        timer := this.timer
+        SetTimer % timer, Off
+    }
+    Func() {
+        msgbox 这里是func函数
+    }
+}
+```
+## 三、落地实现
+>俗话说天上飞的理念，对应着落地跑的实现  
+>话不多说，上代码！
